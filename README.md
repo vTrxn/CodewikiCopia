@@ -6,7 +6,7 @@ Este proyecto ha sido desarrollado como una Single Page Application (SPA) utiliz
 
 ---
 
-## ✨ Características Principales
+##  Características Principales
 
 ### 1. Dashboard e Indexación de Artículos
 - **Buscador Inteligente:** Filtra artículos en tiempo real por título, descripción, autor, etiquetas o categorías.
@@ -35,7 +35,7 @@ Este proyecto ha sido desarrollado como una Single Page Application (SPA) utiliz
 
 ---
 
-## 🛠️ Stack Tecnológico
+##  Stack Tecnológico
 
 - **Framework:** React 19
 - **Bundler:** Vite
@@ -45,7 +45,7 @@ Este proyecto ha sido desarrollado como una Single Page Application (SPA) utiliz
 
 ---
 
-## 💾 Arquitectura de Datos y Persistencia
+##  Arquitectura de Datos y Persistencia
 
 La aplicación implementa una estrategia de persistencia local sin dependencias de bases de datos externas:
 
@@ -55,7 +55,7 @@ La aplicación implementa una estrategia de persistencia local sin dependencias 
 
 ---
 
-## 🚀 Instalación y Uso Local
+##  Instalación y Uso Local
 
 Sigue los siguientes pasos para ejecutar el proyecto en tu máquina local:
 
@@ -79,7 +79,7 @@ Sigue los siguientes pasos para ejecutar el proyecto en tu máquina local:
 
 ---
 
-## 📦 Compilación para Producción
+##  Compilación para Producción
 
 Para generar el paquete listo para despliegue (hosting en GitHub Pages, Vercel, Netlify, etc.), ejecuta:
 
@@ -90,7 +90,3 @@ npm run build
 Los archivos estáticos optimizados se generarán en la carpeta `dist/`.
 
 ---
-
-## 👥 Autores y Colaboradores
-
-- Desarrollado para la cátedra de Ingeniería de Software de **Uniempresarial**.
