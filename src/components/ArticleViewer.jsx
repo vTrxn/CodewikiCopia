@@ -308,7 +308,7 @@ Instrucciones IMPORTANTES para tu formato:
         </ul>
       </div>
 
-      <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
         <div className="viewer-content-container animate-fade-in" style={{ flex: '1', overflowY: 'auto' }}>
           <div className="viewer-article-body">
 
