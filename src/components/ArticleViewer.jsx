@@ -30,6 +30,7 @@ export default function ArticleViewer({
   const [activeViewTab, setActiveViewTab] = useState('readme'); // 'readme' or 'ai-analysis'
   const [copiedCommit, setCopiedCommit] = useState(false);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(true);
   const [aiError, setAiError] = useState('');
 
   if (!activeArticle) return null;
@@ -489,12 +490,19 @@ Instrucciones IMPORTANTES para tu formato:
           </div>
         </div>
         </div>
-        <ChatbotPanel 
-          isOpen={true}
-          contextArticle={activeArticle}
-          onOpenInPlayground={onOpenInPlayground}
-        />
+        {isChatOpen ? (
+          <ChatbotPanel 
+            contextArticle={activeArticle}
+            onOpenInPlayground={onOpenInPlayground}
+            onClose={() => setIsChatOpen(false)}
+          />
+        ) : (
+          <button onClick={() => setIsChatOpen(true)} className="btn btn-primary" style={{ position: 'absolute', bottom: '24px', right: '24px', borderRadius: '50%', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', zIndex: 100 }}>
+            <MessageSquare size={24} />
+          </button>
+        )}
       </div>
     </div>
   );
 }
+

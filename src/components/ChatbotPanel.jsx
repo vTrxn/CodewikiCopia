@@ -175,8 +175,8 @@ IMPORTANTE:
   };
 
   return (
-      <div className="chatbot-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '350px', display: 'flex', flexDirection: 'column', borderLeft: '1px solid var(--card-border)', background: 'var(--bg-secondary)', zIndex: 10, boxShadow: '-5px 0 20px rgba(0,0,0,0.1)' }}>
-        <div className="chatbot-header">
+      <div className="chatbot-panel" onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: '24px', bottom: '24px', width: '350px', height: '500px', display: 'flex', flexDirection: 'column', border: '1px solid var(--card-border)', borderRadius: '12px', background: 'var(--bg-secondary)', zIndex: 100, boxShadow: '0 10px 40px rgba(0,0,0,0.3)' }}>
+        <div className="chatbot-header" style={{ borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
           <div className="chatbot-header-info">
             <div className="chatbot-avatar">
               <Bot size={20} />
