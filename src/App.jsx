@@ -123,12 +123,14 @@ export default function App() {
     setActiveArticle(savedArticle);
     setEditingArticle(null);
     setActiveTab('viewer');
+    setIsChatbotOpen(true);
   };
 
   // 4. Open Article Helper
   const handleSelectArticle = (article) => {
     setActiveArticle(article);
     setActiveTab('viewer');
+    setIsChatbotOpen(true);
   };
 
   // 5. Code Playground Launcher Helper
