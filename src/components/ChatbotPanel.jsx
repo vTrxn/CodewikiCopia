@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, X, MessageSquare, Bot, Sparkles, Code, Play } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Send, X, Bot, Play } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle, onOpenInPlayground }) {
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       sender: 'bot',
-      text: '¡Hola! Soy el Asistente Académico de fUSphere. 🎓\n\nPuedes preguntarme sobre conceptos de programación, pedirme que te explique un código o que te recomiende artículos sobre temas específicos como React, Promesas, QuickSort o Listas Enlazadas.'
+      text: '¡Hola! Soy el Asistente Académico de fUSphere. Puedes preguntarme sobre conceptos de programación, pedirme que te explique un código o que te recomiende repositorios sobre temas específicos como React, Express, PostgreSQL, QuickSort, Listas Enlazadas o Clean Architecture.'
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -23,7 +24,7 @@ export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle,
 
   if (!isOpen) return null;
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -34,62 +35,143 @@ export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle,
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const query = inputValue.toLowerCase().trim();
+    const queryText = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate AI thinking and smart responses based on categories & article content
-    setTimeout(() => {
-      let botResponseText = '';
-      let recommendedArticle = null;
-      let snippet = null;
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY || localStorage.getItem('fusoft_groq_api_key') || '';
 
-      if (query.includes('state') || query.includes('usestate') || query.includes('react') || query.includes('estado')) {
-        recommendedArticle = articles.find(a => a.id === 'intro-react-state');
-        botResponseText = 'En React, el **estado** representa los datos dinámicos de un componente. Para manejarlo en componentes funcionales, usamos el hook `useState`.\n\nAquí tienes un ejemplo básico de un contador utilizando React:';
-        snippet = `const [contador, setContador] = useState(0);\n// Para actualizar:\nsetContador(contador + 1);`;
-      } else if (query.includes('quicksort') || query.includes('ordenamiento') || query.includes('algoritmo')) {
-        recommendedArticle = articles.find(a => a.id === 'algorithm-quicksort');
-        botResponseText = 'El algoritmo **QuickSort** utiliza el enfoque de "Divide y Vencerás". Elige un pivote, ordena los menores a la izquierda y los mayores a la derecha recursivamente. Es un algoritmo sumamente rápido con una complejidad promedio de O(n log n).';
-        snippet = `function quicksort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivote = arr[arr.length - 1];\n  const izq = arr.filter((x, i) => x < pivote && i < arr.length - 1);\n  const der = arr.filter(x => x >= pivote);\n  return [...quicksort(izq), pivote, ...quicksort(der)];\n}`;
-      } else if (query.includes('lista') || query.includes('enlazada') || query.includes('estructura')) {
-        recommendedArticle = articles.find(a => a.id === 'linked-list-basics');
-        botResponseText = 'Una **Lista Simplemente Enlazada** es una colección de nodos enlazados mediante punteros en memoria no contigua. Cada nodo almacena su valor y un puntero al nodo `siguiente`. A diferencia de los arrays, insertar elementos al inicio toma O(1), pero buscar elementos toma O(n).';
-        snippet = `class Nodo {\n  constructor(valor) {\n    this.valor = valor;\n    this.siguiente = null;\n  }\n}`;
-      } else if (query.includes('git') || query.includes('commit') || query.includes('workflow')) {
-        recommendedArticle = articles.find(a => a.id === 'git-workflow-university');
-        botResponseText = 'Para proyectos universitarios en grupo, se recomienda usar **GitHub Flow**:\n1. Mantén la rama `main` siempre estable.\n2. Trabaja en ramas independientes (`git checkout -b feature/nombre`).\n3. Crea Pull Requests para integrar cambios con tus compañeros.';
-        snippet = `git checkout -b feature/nueva-funcion\ngit add .\ngit commit -m "Agrega funcion"\ngit push origin feature/nueva-funcion`;
-      } else if (query.includes('promesa') || query.includes('async') || query.includes('await') || query.includes('asincro')) {
-        recommendedArticle = articles.find(a => a.id === 'javascript-async-await');
-        botResponseText = 'La programación asíncrona en JavaScript se maneja con **Promesas** y la sintaxis moderna `async/await`. `async` declara que una función devuelve una promesa y `await` pausa la ejecución hasta que la promesa se cumpla.';
-        snippet = `async function cargarDatos() {\n  try {\n    const response = await fetch('https://api.github.com');\n    const data = await response.json();\n    console.log(data);\n  } catch (err) {\n    console.error(err);\n  }\n}`;
-      } else {
-        // Fallback search match in headings/descriptions
-        const matched = articles.find(a => 
-          a.title.toLowerCase().includes(query) || 
-          a.description.toLowerCase().includes(query)
-        );
+    if (!apiKey) {
+      // Simulate/Fallback Mock Response
+      setTimeout(() => {
+        let botResponseText;
+        let recommendedArticle = null;
+        let snippet = null;
+        const query = queryText.toLowerCase().trim();
 
-        if (matched) {
-          recommendedArticle = matched;
-          botResponseText = `Encontré un artículo relacionado con tu pregunta: **"${matched.title}"**. Explica detalladamente este tema e incluye ejemplos prácticos de código.`;
+        if (query.includes('state') || query.includes('usestate') || query.includes('react') || query.includes('estado')) {
+          recommendedArticle = articles.find(a => a.id === 'fusoft-vite-react-boilerplate');
+          botResponseText = 'En React, el **estado** representa los datos dinámicos de un componente. Para manejarlo en componentes funcionales, usamos el hook `useState`.\n\nAquí tienes un ejemplo básico de un contador utilizando React:';
+          snippet = `const [contador, setContador] = useState(0);\n// Para actualizar:\nsetContador(contador + 1);`;
+        } else if (query.includes('quicksort') || query.includes('ordenamiento') || query.includes('algoritmo')) {
+          recommendedArticle = articles.find(a => a.id === 'uniempresarial-algorithms-playground');
+          botResponseText = 'El algoritmo **QuickSort** utiliza el enfoque de "Divide y Vencerás". Elige un pivote, ordena los menores a la izquierda y los mayores a la derecha recursivamente. Es un algoritmo sumamente rápido con una complejidad promedio de O(n log n).';
+          snippet = `function quicksort(arr) {\n  if (arr.length <= 1) return arr;\n  const pivote = arr[arr.length - 1];\n  const izq = arr.filter((x, i) => x < pivote && i < arr.length - 1);\n  const der = arr.filter(x => x >= pivote);\n  return [...quicksort(izq), pivote, ...quicksort(der)];\n}`;
+        } else if (query.includes('lista') || query.includes('enlazada') || query.includes('estructura')) {
+          recommendedArticle = articles.find(a => a.id === 'fusoft-educational-data-structures');
+          botResponseText = 'Una **Lista Simplemente Enlazada** es una colección de nodos enlazados mediante punteros en memoria no contigua. Cada nodo almacena su valor y un puntero al nodo `siguiente`. A diferencia de los arrays, insertar elementos al inicio toma O(1), pero buscar elementos toma O(n).';
+          snippet = `class Nodo {\n  constructor(valor) {\n    this.valor = valor;\n    this.siguiente = null;\n  }\n}`;
+        } else if (query.includes('nest') || query.includes('clean') || query.includes('arquitectura') || query.includes('ddd')) {
+          recommendedArticle = articles.find(a => a.id === 'fusoft-clean-architecture-nestjs');
+          botResponseText = 'La **Arquitectura Limpia** e inyección de dependencias separan el núcleo del negocio (Dominio y Casos de Uso) de los detalles tecnológicos (Bases de datos, NestJS). Esto permite cambiar piezas de infraestructura sin alterar la lógica corporativa.';
+          snippet = `// Caso de Uso puro de Dominio\nclass CrearProyecto {\n  constructor(proyectoRepo) {\n    this.repo = proyectoRepo;\n  }\n  async ejecutar(id, titulo) {\n    const p = new Proyecto(id, titulo);\n    return this.repo.guardar(p);\n  }\n}`;
+        } else if (query.includes('express') || query.includes('api') || query.includes('postgres') || query.includes('backend') || query.includes('jwt')) {
+          recommendedArticle = articles.find(a => a.id === 'uniempresarial-express-postgresql-api');
+          botResponseText = 'Nuestra API base en Express con PostgreSQL utiliza Prisma ORM para las consultas relacionales y JWT para la protección de endpoints académicos. Aquí tienes el middleware básico de validación JWT:';
+          snippet = `const jwt = require('jsonwebtoken');\nconst decoded = jwt.verify(token, process.env.JWT_SECRET);\nreq.user = decoded;`;
         } else {
-          botResponseText = 'Lo siento, no tengo una respuesta precisa para esa consulta en mi base académica actual. Sin embargo, puedes explorar los artículos disponibles o utilizar el **Playground** para realizar pruebas de código directamente en JavaScript.';
+          const matched = articles.find(a => 
+            a.title.toLowerCase().includes(query) || 
+            a.description.toLowerCase().includes(query)
+          );
+
+          if (matched) {
+            recommendedArticle = matched;
+            botResponseText = `Encontré un repositorio relacionado con tu pregunta: **"${matched.title}"**. Explica detalladamente este tema e incluye ejemplos prácticos de código.`;
+          } else {
+            botResponseText = 'Lo siento, no tengo una respuesta precisa para esa consulta en mi base académica actual. Sin embargo, puedes explorar los repositorios disponibles o utilizar el **Playground** para realizar pruebas de código directamente en JavaScript.\n\n*(Nota: Configura una API Key en el archivo .env para habilitar al tutor en tiempo real con Groq)*';
+          }
         }
+
+        const botMessage = {
+          id: `msg-${Date.now()}`,
+          sender: 'bot',
+          text: botResponseText,
+          article: recommendedArticle,
+          snippet: snippet
+        };
+
+        setMessages(prev => [...prev, botMessage]);
+        setIsTyping(false);
+      }, 1200);
+      return;
+    }
+
+    // Call Real Groq API
+    try {
+      // Build conversation history for context
+      const chatHistory = messages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      }));
+
+      // Add new user message
+      chatHistory.push({ role: 'user', content: queryText });
+
+      // Insert System Prompt at the beginning
+      const systemPrompt = `Eres el Asistente Académico / Tutor de fUSphere, una plataforma educativa de Uniempresarial y fUSoft.
+Tienes acceso a los siguientes repositorios de código real en la base académica:
+${articles.map(art => `- **${art.title}** (Categoría: ${art.category}, Dificultad: ${art.difficulty}, ID: ${art.id}): ${art.description}`).join('\n')}
+
+Responde las preguntas de los estudiantes de forma didáctica, clara, y estructurada. Puedes explicar algoritmos, buenas prácticas y analizar códigos. Usa Markdown para dar un formato claro.
+IMPORTANTE: 
+1. Si haces referencia a alguno de los repositorios del catálogo, menciona claramente su ID (ej. fusoft-vite-react-boilerplate, uniempresarial-algorithms-playground, etc.) en tu texto para que el sistema le sugiera un enlace directo.
+2. Si incluyes un fragmento de código, asegúrate de envolverlo en bloques de código de triple acento grave (\`\`\`javascript ... \`\`\`) para que el usuario pueda abrirlo y ejecutarlo en el Playground.`;
+
+      chatHistory.unshift({ role: 'system', content: systemPrompt });
+
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: chatHistory,
+          temperature: 0.7,
+          max_tokens: 1024
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.error?.message || 'Error de comunicación con Groq.');
       }
+
+      const data = await response.json();
+      const responseText = data.choices[0].message.content;
+
+      // Extract recommended article
+      const matchedArticle = articles.find(art => 
+        responseText.toLowerCase().includes(art.id.toLowerCase())
+      );
+
+      // Extract snippet code block
+      const codeBlockRegex = /```(?:javascript|typescript|js|json|html|css)?\s*([\s\S]*?)```/i;
+      const codeMatch = responseText.match(codeBlockRegex);
+      const snippet = codeMatch ? codeMatch[1].trim() : null;
 
       const botMessage = {
         id: `msg-${Date.now()}`,
         sender: 'bot',
-        text: botResponseText,
-        article: recommendedArticle,
+        text: responseText,
+        article: matchedArticle || null,
         snippet: snippet
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (err) {
+      console.error(err);
+      const errorMessage = {
+        id: `msg-${Date.now()}`,
+        sender: 'bot',
+        text: `Lo siento, ocurrió un error al comunicarme con el motor de IA de Groq: ${err.message || 'Error desconocido'}.\n\nReajustando al modo simulación académica...`
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1200);
+    }
   };
 
   return (
@@ -116,7 +198,13 @@ export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle,
         <div className="chatbot-messages">
           {messages.map((msg) => (
             <div key={msg.id} className={`chat-bubble ${msg.sender}`}>
-              <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
+              {msg.sender === 'bot' ? (
+                <div className="chat-bubble-markdown">
+                  <MarkdownRenderer content={msg.text} />
+                </div>
+              ) : (
+                <div style={{ whiteSpace: 'pre-line' }}>{msg.text}</div>
+              )}
               
               {msg.snippet && (
                 <div style={{ marginTop: '10px' }}>
@@ -140,7 +228,7 @@ export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle,
               {msg.article && (
                 <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '8px' }}>
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
-                    Artículo Recomendado:
+                    Repositorio Recomendado:
                   </span>
                   <button 
                     onClick={() => {
@@ -150,7 +238,7 @@ export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle,
                     className="btn btn-primary"
                     style={{ padding: '6px 12px', fontSize: '0.8rem', width: '100%', justifyContent: 'center' }}
                   >
-                    Leer "{msg.article.title}"
+                    Explorar "{msg.article.title}"
                   </button>
                 </div>
               )}

@@ -1,7 +1,6 @@
-import React from 'react';
-import { BookOpen, Code, FileCode, PlusCircle, Bookmark } from 'lucide-react';
+import { BookOpen, Code, PlusCircle, Bookmark, Database } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogoClick }) {
+export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogoClick, onOpenDbModal, onBookmarksClick }) {
   return (
     <nav className="navbar">
       <div className="logo-container" onClick={onLogoClick}>
@@ -13,7 +12,7 @@ export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogo
 
       <div className="nav-links">
         <button
-          className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+          className={`nav-item ${activeTab === 'dashboard' && !activeTab.showOnlyBookmarks ? 'active' : ''}`}
           onClick={() => setActiveTab('dashboard')}
         >
           <BookOpen size={18} />
@@ -25,7 +24,7 @@ export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogo
           onClick={() => setActiveTab('editor')}
         >
           <PlusCircle size={18} />
-          <span>Crear Artículo</span>
+          <span>Crear Repositorio</span>
         </button>
 
         <button
@@ -35,6 +34,15 @@ export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogo
           <Code size={18} />
           <span>Playground</span>
         </button>
+
+        <button
+          className="nav-item"
+          onClick={onOpenDbModal}
+          title="Gestionar Base de Datos local y de prueba"
+        >
+          <Database size={18} />
+          <span>Base de Datos</span>
+        </button>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -42,7 +50,8 @@ export default function Navbar({ activeTab, setActiveTab, bookmarksCount, onLogo
           <div 
             className="nav-item active" 
             style={{ cursor: 'pointer', borderRadius: '30px', padding: '6px 14px' }}
-            onClick={() => setActiveTab('dashboard')} // Triggers display of bookmarks
+            onClick={onBookmarksClick}
+            title="Ver tus artículos marcados"
           >
             <Bookmark size={16} fill="currentColor" />
             <span>Marcadores ({bookmarksCount})</span>

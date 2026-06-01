@@ -1,5 +1,4 @@
-import React from 'react';
-import { Calendar, User, Bookmark, ExternalLink } from 'lucide-react';
+import { Calendar, User, Bookmark } from 'lucide-react';
 
 export default function ArticleCard({ article, onClick, isBookmarked, onToggleBookmark }) {
   const handleBookmarkClick = (e) => {
@@ -8,7 +7,7 @@ export default function ArticleCard({ article, onClick, isBookmarked, onToggleBo
   };
 
   return (
-    <div className="glass-panel article-card animate-fade-in" onClick={onClick}>
+    <div className="article-card animate-fade-in" onClick={onClick}>
       <div className="article-meta-row">
         <span className="category-tag">{article.category}</span>
         <span className={`difficulty-badge ${article.difficulty}`}>

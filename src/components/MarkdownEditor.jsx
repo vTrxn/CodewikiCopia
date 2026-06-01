@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MarkdownRenderer from './MarkdownRenderer';
-import { Save, X, Eye, Edit, Tag, BookOpen } from 'lucide-react';
+import { Save, X, Eye, Edit } from 'lucide-react';
 
 export default function MarkdownEditor({ existingArticle, onSave, onCancel }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('Frontend');
-  const [difficulty, setDifficulty] = useState('Principiante');
-  const [author, setAuthor] = useState('');
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState('');
-  const [content, setContent] = useState('');
-  const [playgroundCode, setPlaygroundCode] = useState('');
-  const [previewMode, setPreviewMode] = useState(false); // Mobile toggle or split-screen toggle
-
   // Seed default templates if creating new
-  const defaultTemplate = `# Título de tu Artículo
+  const defaultTemplate = `# README del Repositorio
+  
+Escribe una introducción para tu repositorio aquí.
 
-Escribe una introducción para tu tema aquí.
+## Estructura
 
-## Subtítulo 1
-
-Aquí puedes añadir texto descriptivo.
+Describir la estructura del código.
 
 \`\`\`javascript
 // Añade un bloque de código interactivo
@@ -32,36 +21,25 @@ console.log(mensaje);
 > [!NOTE]
 > Este es un bloque de nota informativa. Puedes usar [!TIP], [!IMPORTANT], o [!WARNING] también.
 
-## Subtítulo 2
+## Uso
 
-- Lista de conceptos clave
-- Concepto 2`;
+- Instrucciones de uso`;
 
   const defaultStarterCode = `// starter playground code
-console.log("¡Probando el código de este artículo!");
+console.log("¡Probando el código de este repositorio!");
 `;
 
-  useEffect(() => {
-    if (existingArticle) {
-      setTitle(existingArticle.title);
-      setDescription(existingArticle.description);
-      setCategory(existingArticle.category);
-      setDifficulty(existingArticle.difficulty);
-      setAuthor(existingArticle.author);
-      setTags(existingArticle.tags || []);
-      setContent(existingArticle.content);
-      setPlaygroundCode(existingArticle.playgroundCode || '');
-    } else {
-      setTitle('');
-      setDescription('');
-      setCategory('Frontend');
-      setDifficulty('Principiante');
-      setAuthor('Estudiante Uniempresarial');
-      setTags(['React', 'Web']);
-      setContent(defaultTemplate);
-      setPlaygroundCode(defaultStarterCode);
-    }
-  }, [existingArticle]);
+  const [title, setTitle] = useState(existingArticle ? existingArticle.title : '');
+  const [description, setDescription] = useState(existingArticle ? existingArticle.description : '');
+  const [category, setCategory] = useState(existingArticle ? existingArticle.category : 'Frontend');
+  const [difficulty, setDifficulty] = useState(existingArticle ? existingArticle.difficulty : 'Principiante');
+  const [author, setAuthor] = useState(existingArticle ? existingArticle.author : 'Estudiante Uniempresarial');
+  const [tags, setTags] = useState(existingArticle ? (existingArticle.tags || []) : ['React', 'Web']);
+  const [tagInput, setTagInput] = useState('');
+  const [content, setContent] = useState(existingArticle ? existingArticle.content : defaultTemplate);
+  const [playgroundCode, setPlaygroundCode] = useState(existingArticle ? (existingArticle.playgroundCode || '') : defaultStarterCode);
+  const [previewMode, setPreviewMode] = useState(false); // Mobile toggle or split-screen toggle
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAddTag = (e) => {
     if (e.key === 'Enter' || e.key === ',') {
@@ -78,11 +56,73 @@ console.log("¡Probando el código de este artículo!");
     setTags(tags.filter((_, idx) => idx !== indexToRemove));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
       alert('Por favor ingresa un título y contenido para el artículo.');
       return;
+    }
+
+    setIsSubmitting(true);
+
+    const apiKey = import.meta.env.VITE_GROQ_API_KEY || localStorage.getItem('fusoft_groq_api_key') || '';
+
+    let generatedAnalysis = null;
+
+    if (apiKey) {
+      try {
+        const userPrompt = `Analiza el siguiente repositorio de código y genera una estructura explicativa dividida EXACTAMENTE en las siguientes 8 secciones:
+1. ## Application Core and UI
+2. ## Application State and Configuration Management
+3. ## User Interface Components and Interaction
+4. ## Core Application Utilities and Helpers
+5. ## API and AI Service Integration
+6. ## Desktop Client and Backend Services
+7. ## Localization and Persona Management
+8. ## Web Audio and Public Assets
+
+Aquí está la información del repositorio (Título, Descripción y README completo):
+Título: ${title}
+Descripción: ${description}
+Contenido README:
+${content}
+
+Instrucciones IMPORTANTES para tu formato:
+- Retorna únicamente las 8 secciones especificadas en formato Markdown bien estructurado.
+- Explica de forma clara y técnica qué hace el repositorio en cada sección y dónde se ubican los archivos correspondientes (por ejemplo, src/App.jsx, config, routes, etc.).
+- Incluye ejemplos de código didácticos en cada sección envueltos en bloques de código de triple acento grave (por ejemplo, \`\`\`javascript ... \`\`\`) para poder ejecutarlos en el playground.
+- Sé didáctico y profesional en español.`;
+
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              {
+                role: 'system',
+                content: 'Eres un analizador de código experto para la plataforma académica fUSphere de Uniempresarial. Retornas segmentaciones de repositorios formateadas en Markdown técnico y estructurado.'
+              },
+              {
+                role: 'user',
+                content: userPrompt
+              }
+            ],
+            temperature: 0.3,
+            max_tokens: 2048
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          generatedAnalysis = data.choices[0].message.content;
+        }
+      } catch (err) {
+        console.error('Error pre-analizando con Groq:', err);
+      }
     }
 
     const savedArticle = {
@@ -95,9 +135,12 @@ console.log("¡Probando el código de este artículo!");
       tags,
       lastUpdated: new Date().toISOString().split('T')[0],
       content,
-      playgroundCode: playgroundCode || `// Escribe tu código aquí\n`
+      playgroundCode: playgroundCode || `// Escribe tu código aquí\n`,
+      aiAnalysis: generatedAnalysis,
+      isUserOwned: true
     };
 
+    setIsSubmitting(false);
     onSave(savedArticle);
   };
 
@@ -107,7 +150,7 @@ console.log("¡Probando el código de este artículo!");
         <div className="editor-title-input-row">
           <input 
             type="text" 
-            placeholder="Título del Artículo..." 
+            placeholder="Título del Repositorio..." 
             className="editor-meta-input editor-title-input"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -137,7 +180,7 @@ console.log("¡Probando el código de este artículo!");
             onClick={handleSubmit}
           >
             <Save size={16} />
-            <span>Guardar Artículo</span>
+            <span>Guardar Repositorio</span>
           </button>
         </div>
       </div>
@@ -210,7 +253,7 @@ console.log("¡Probando el código de este artículo!");
           <span className="editor-meta-label">Resumen de una línea:</span>
           <input 
             type="text" 
-            placeholder="Una descripción muy corta de lo que trata este artículo..." 
+            placeholder="Una descripción muy corta de lo que trata este repositorio..." 
             className="editor-meta-input"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -230,11 +273,11 @@ console.log("¡Probando el código de este artículo!");
               className="editor-textarea"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="# Título de tu Artículo..."
+              placeholder="# README del Repositorio (# Título)..."
             />
             
             <div className="editor-pane-header" style={{ borderTop: '1px solid var(--card-border)' }}>
-              <span>Starter Code (para el Live Playground del artículo)</span>
+              <span>Starter Code (para el Live Playground del repositorio)</span>
             </div>
             <textarea 
               className="editor-textarea"
@@ -248,13 +291,20 @@ console.log("¡Probando el código de este artículo!");
 
         <div className="editor-pane" style={{ flex: previewMode ? 2 : 1 }}>
           <div className="editor-pane-header">
-            <span>Previsualización del Artículo</span>
+            <span>Previsualización del Repositorio</span>
           </div>
           <div className="editor-preview-pane">
             <MarkdownRenderer content={content} />
           </div>
         </div>
       </div>
+      {isSubmitting && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(2,4,10,0.85)', backdropFilter: 'blur(8px)', zIndex: 2000, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+          <div className="chatbot-status-dot" style={{ width: '24px', height: '24px', background: 'var(--accent-secondary)', animation: 'pulse 1s infinite' }}></div>
+          <h3 style={{ fontFamily: 'var(--font-heading)', color: '#fff', fontSize: '1.2rem', fontWeight: 600 }}>Tutor fUSphere AI</h3>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Orquestando repositorio a través de Groq y particionando módulos...</span>
+        </div>
+      )}
     </div>
   );
 }

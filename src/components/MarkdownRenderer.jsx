@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Copy, Check, Play, BookOpen, AlertCircle, Sparkles, AlertTriangle, Info } from 'lucide-react';
+import { useState } from 'react';
+import { Copy, Check, Play, AlertCircle, Sparkles, AlertTriangle, Info } from 'lucide-react';
 
 export default function MarkdownRenderer({ content, onOpenInPlayground }) {
   const [copiedId, setCopiedId] = useState(null);
@@ -178,20 +178,40 @@ export default function MarkdownRenderer({ content, onOpenInPlayground }) {
     
     // Replace inline code blocks
     let formatted = text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
-    // Replace bold text
-    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    // Replace italic text
-    formatted = formatted.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-    // Replace links
-    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="wiki-link">$1</a>');
+    // Replace bold text (supports **bold** and __bold__)
+    formatted = formatted.replace(/\*\*([\s\S]*?)\*\*/g, '<strong>$1</strong>');
+    formatted = formatted.replace(/__([\s\S]*?)__/g, '<strong>$1</strong>');
+    // Replace italic text (supports *italic* and _italic_)
+    formatted = formatted.replace(/\*([\s\S]*?)\*/g, '<em>$1</em>');
+    formatted = formatted.replace(/_([\s\S]*?)_/g, '<em>$1</em>');
+    // Replace links (removed target="_blank" to prevent opening other pages)
+    formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="wiki-link">$1</a>');
 
     return <span dangerouslySetInnerHTML={{ __html: formatted }} />;
+  };
+
+  const handleContainerClick = (e) => {
+    const target = e.target.closest('a');
+    if (target) {
+      const href = target.getAttribute('href');
+      e.preventDefault(); // Clickable but blocks leading to other pages
+      
+      if (href && href.startsWith('#')) {
+        const elementId = href.slice(1);
+        const el = document.getElementById(elementId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        console.log(`[fUSphere Link Sim]: Redirección académica simulada para: ${href}`);
+      }
+    }
   };
 
   const parsedElements = parseMarkdown(content);
 
   return (
-    <div className="markdown-body">
+    <div className="markdown-body" onClick={handleContainerClick}>
       {parsedElements.map((el) => {
         switch (el.type) {
           case 'h1':
@@ -204,7 +224,7 @@ export default function MarkdownRenderer({ content, onOpenInPlayground }) {
           case 'p':
             return <p key={el.id}>{renderInlineStyles(el.text)}</p>;
           
-          case 'list':
+          case 'list': {
             const ListTag = el.ordered ? 'ol' : 'ul';
             return (
               <ListTag key={el.id}>
@@ -213,8 +233,9 @@ export default function MarkdownRenderer({ content, onOpenInPlayground }) {
                 ))}
               </ListTag>
             );
+          }
           
-          case 'alert':
+          case 'alert': {
             const alertIcons = {
               note: <Info size={16} />,
               tip: <Sparkles size={16} />,
@@ -236,6 +257,7 @@ export default function MarkdownRenderer({ content, onOpenInPlayground }) {
                 <p style={{ margin: 0, fontSize: '0.9rem' }}>{renderInlineStyles(el.content)}</p>
               </div>
             );
+          }
 
           case 'table':
             return (

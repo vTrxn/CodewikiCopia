@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ArticleCard from './ArticleCard';
 import { Search, PlusCircle, Bookmark, Compass, RefreshCw } from 'lucide-react';
 
@@ -58,9 +58,13 @@ export default function Dashboard({
       <div className="bg-gradient-glow"></div>
 
       <header className="hero-section">
-        <h1 className="hero-title animate-fade-in">Wiki de Programación Uniempresarial</h1>
+        <h1 className="hero-title animate-fade-in">
+          {showOnlyBookmarks ? 'Tus Repositorios Marcados' : 'Repositorios de Código fUSoft / Uniempresarial'}
+        </h1>
         <p className="hero-subtitle animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          La plataforma colaborativa de desarrollo de software. Aprende, comparte artículos de código, realiza pruebas en el playground interactivo y estudia con nuestro tutor inteligente.
+          {showOnlyBookmarks 
+            ? 'Colección de tus repositorios guardados para repasar conceptos, algoritmos y sintaxis rápidamente.'
+            : 'La plataforma colaborativa de desarrollo de software. Aprende, explora repositorios funcionales, realiza pruebas en el playground interactivo y estudia con nuestro tutor inteligente.'}
         </p>
         
         <div className="search-bar-wrapper animate-fade-in" style={{ animationDelay: '0.15s' }}>
@@ -134,22 +138,22 @@ export default function Dashboard({
           onClick={onAddNewArticle}
         >
           <PlusCircle size={14} />
-          <span>Crear Nuevo Artículo</span>
+          <span>Registrar Repositorio</span>
         </button>
       </section>
 
       {/* Articles Rendering */}
       {filteredArticles.length === 0 ? (
         <div 
-          className="glass-panel animate-fade-in" 
+          className="empty-state-panel animate-fade-in" 
           style={{ padding: '60px 40px', textAlign: 'center', color: 'var(--text-secondary)' }}
         >
           <Compass size={40} style={{ color: 'var(--text-muted)', marginBottom: '16px' }} />
           <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '8px', color: 'var(--text-primary)' }}>
-            No se encontraron artículos
+            No se encontraron repositorios
           </h3>
           <p style={{ fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto 20px' }}>
-            Prueba ajustando los filtros de búsqueda, categorías, dificultad o crea uno nuevo para poblar la plataforma.
+            Prueba ajustando los filtros de búsqueda, categorías, dificultad o registra uno nuevo para poblar la plataforma.
           </p>
           <button 
             className="btn btn-secondary"
