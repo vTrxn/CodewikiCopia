@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Send, X, Bot, Play } from 'lucide-react';
 import MarkdownRenderer from './MarkdownRenderer';
 
-export default function ChatbotPanel({ isOpen, contextArticle, onOpenInPlayground }) {
+export default function ChatbotPanel({ articles = [], contextArticle, onOpenInPlayground, onClose }) {
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
@@ -21,8 +21,6 @@ export default function ChatbotPanel({ isOpen, contextArticle, onOpenInPlaygroun
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-
-  if (!isOpen) return null;
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -175,8 +173,8 @@ IMPORTANTE:
   };
 
   return (
-      <div className="chatbot-widget" onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: '24px', bottom: '24px', width: '350px', height: '500px', display: 'flex', flexDirection: 'column', border: '1px solid var(--card-border)', borderRadius: '12px', background: 'var(--bg-secondary)', zIndex: 100, boxShadow: '0 10px 40px rgba(0,0,0,0.3)' }}>
-        <div className="chatbot-header" style={{ borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
+      <div className="chatbot-widget animate-fade-in" onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '400px', height: '100%', display: 'flex', flexDirection: 'column', borderLeft: '1px solid var(--card-border)', background: 'var(--bg-secondary)', zIndex: 9999, boxShadow: '-10px 0 40px rgba(0,0,0,0.3)' }}>
+        <div className="chatbot-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="chatbot-header-info">
             <div className="chatbot-avatar">
               <Bot size={20} />
@@ -189,6 +187,11 @@ IMPORTANTE:
               </div>
             </div>
           </div>
+          {onClose && (
+            <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px' }}>
+              <X size={20} />
+            </button>
+          )}
         </div>
 
         <div className="chatbot-messages">

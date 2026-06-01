@@ -37,21 +37,16 @@ export default function Dashboard({
 
   return (
     <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
-      {/* Left Sidebar Menu (Overlay Drawer) */}
+      {/* Left Sidebar Menu */}
       <div style={{ 
         width: '280px', 
+        flexShrink: 0,
         borderRight: '1px solid var(--card-border)',
         background: 'var(--bg-primary)',
         overflowY: 'auto',
-        transition: 'left 0.3s ease',
         display: 'flex',
         flexDirection: 'column',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: isSidebarOpen ? '0' : '-280px',
-        zIndex: 50,
-        boxShadow: isSidebarOpen ? '4px 0 15px rgba(0,0,0,0.1)' : 'none'
+        zIndex: 50
       }}>
         <div style={{ padding: '24px 16px' }}>
            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>

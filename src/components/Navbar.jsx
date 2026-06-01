@@ -32,13 +32,7 @@ export default function Navbar({
       gap: '24px'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '200px' }}>
-        <button 
-          onClick={onToggleSidebar}
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '8px', borderRadius: '50%' }} 
-          className="hover-bg"
-        >
-          <Menu size={24} />
-        </button>
+
         <div className="logo-container" onClick={onLogoClick} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
           <div style={{ color: 'var(--accent-primary)', display: 'flex' }}>
             <BookOpen size={28} />

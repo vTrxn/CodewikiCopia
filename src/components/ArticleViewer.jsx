@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 
 export default function ArticleViewer({ 
+  articles,
   activeArticle, 
   onBackToDashboard, 
   isBookmarked, 
@@ -275,12 +276,6 @@ Instrucciones IMPORTANTES para tu formato:
         {/* Drawer Header (Always visible when open) */}
         <div className="sidebar-mobile-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <span className="sidebar-title" style={{ margin: 0 }}>Índice</span>
-          <button 
-            onClick={() => setIsSidebarOpen(false)}
-            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}
-          >
-            <X size={20} />
-          </button>
         </div>
 
         <button 
@@ -311,7 +306,7 @@ Instrucciones IMPORTANTES para tu formato:
       </div>
 
       <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden', position: 'relative' }}>
-        <div className="viewer-content-container animate-fade-in" style={{ flex: '1', overflowY: 'auto' }}>
+        <div className="viewer-content-container animate-fade-in" style={{ flex: '1', overflowY: 'auto', paddingRight: isChatOpen ? '420px' : '40px' }}>
           <div className="viewer-article-body">
 
           {/* Simple and friendly Wiki-style Header */}
@@ -493,6 +488,7 @@ Instrucciones IMPORTANTES para tu formato:
         </div>
         {isChatOpen ? (
           <ChatbotPanel 
+            articles={articles}
             contextArticle={activeArticle}
             onOpenInPlayground={onOpenInPlayground}
             onClose={() => setIsChatOpen(false)}
