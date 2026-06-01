@@ -12,7 +12,8 @@ import {
   Sparkles, 
   AlertCircle,
   ArrowLeft,
-  X
+  X,
+  MessageSquare
 } from 'lucide-react';
 
 export default function ArticleViewer({ 
