@@ -1,6 +1,6 @@
-# CodeWiki | Plataforma de Aprendizaje y Colaboración de Programación
+# fUSphere | Plataforma de Aprendizaje y Colaboración de Programación
 
-**CodeWiki** es una plataforma interactiva de documentación, desarrollo de software y tutoría inteligente adaptada para estudiantes y profesores de la **Fundación Universitaria de la Cámara de Comercio de Bogotá - Uniempresarial**.
+**fUSphere** es una plataforma interactiva de documentación, desarrollo de software y tutoría inteligente adaptada para estudiantes y profesores de la **Fundación Universitaria de la Cámara de Comercio de Bogotá - Uniempresarial**.
 
 Este proyecto ha sido desarrollado como una Single Page Application (SPA) utilizando **React** y **Vite**, ofreciendo un diseño dinámico en modo oscuro con una base de datos local y un asistente de código interactivo.
 
@@ -30,8 +30,8 @@ Este proyecto ha sido desarrollado como una Single Page Application (SPA) utiliz
 - **Integración Directa:** Carga rápida del código de los artículos del curso hacia el playground en un solo clic.
 
 ### 5. Tutor AI Académico (Asistente Integrado)
-- **Chat Flotante:** Panel de ayuda técnica disponible desde cualquier pantalla.
-- **Respuestas Inteligentes:** Responde preguntas sobre conceptos complejos (useState, QuickSort, Git, etc.), muestra bloques de código funcionales y recomienda lecturas relacionadas dentro de la wiki.
+- **Panel Lateral Integrado:** Panel de ayuda técnica y conceptual integrado en el Lector de Artículos para un acceso fluido y contextualizado.
+- **Respuestas Inteligentes:** Responde preguntas sobre conceptos complejos (useState, QuickSort, Git, etc.), muestra bloques de código funcionales y recomienda lecturas relacionadas dentro de la plataforma.
 
 ---
 
@@ -75,7 +75,7 @@ Sigue los siguientes pasos para ejecutar el proyecto en tu máquina local:
    ```bash
    npm run dev
    ```
-5. **Acceder a la aplicación:** Abre tu navegador e ingresa a la URL local generada por Vite (usualmente `http://localhost:5173`).
+5. **Acceder a la aplicación:** Abre tu navegador e ingresa a la URL local generada por Vite (usualmente `http://localhost:5173` o `http://localhost:5174`).
 
 ---
 
