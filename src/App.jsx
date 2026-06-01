@@ -56,6 +56,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'viewer', 'editor', 'playground'
+  const [previousTab, setPreviousTab] = useState('dashboard');
   const [activeArticle, setActiveArticle] = useState(null);
   const [editingArticle, setEditingArticle] = useState(null);
   const [playgroundCode, setPlaygroundCode] = useState('');
@@ -252,20 +253,39 @@ export default function App() {
       <Navbar 
         activeTab={activeTab} 
         setActiveTab={(tab) => {
-          setActiveTab(tab);
-          if (tab === 'editor') {
-            setEditingArticle(null); // Clear editing states on manual "Create" click
-          }
-          if (tab === 'dashboard') {
-            setShowOnlyBookmarks(false); // Reset bookmarks view
+          if (activeTab === tab) {
+            // Restore previous tab if clicking the same button
+            setActiveTab(previousTab);
+            if (previousTab === 'dashboard') {
+              setShowOnlyBookmarks(false);
+            }
+          } else {
+            // Store previous and set new
+            setPreviousTab(activeTab);
+            setActiveTab(tab);
+            if (tab === 'editor') {
+              setEditingArticle(null); // Clear editing states on manual "Create" click
+            }
+            if (tab === 'dashboard') {
+              setShowOnlyBookmarks(false); // Reset bookmarks view
+            }
           }
         }}
         bookmarksCount={bookmarks.length}
         onLogoClick={handleLogoClick}
-        onOpenDbModal={() => setIsDbModalOpen(true)}
+        isDbModalOpen={isDbModalOpen}
+        onToggleDbModal={() => setIsDbModalOpen(!isDbModalOpen)}
         onBookmarksClick={() => {
-          setActiveTab('dashboard');
-          setShowOnlyBookmarks(true);
+          if (activeTab === 'dashboard' && showOnlyBookmarks) {
+             // Toggle off bookmarks
+             setShowOnlyBookmarks(false);
+          } else {
+            if (activeTab !== 'dashboard') {
+              setPreviousTab(activeTab);
+            }
+            setActiveTab('dashboard');
+            setShowOnlyBookmarks(true);
+          }
         }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

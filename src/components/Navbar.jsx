@@ -1,11 +1,12 @@
 import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon } from 'lucide-react';
 
-export default function Navbar({ 
+export default function Navbar({
   activeTab, 
   setActiveTab, 
   bookmarksCount, 
   onLogoClick, 
-  onOpenDbModal, 
+  isDbModalOpen,
+  onToggleDbModal, 
   onBookmarksClick,
   searchQuery,
   setSearchQuery,
@@ -115,8 +116,8 @@ export default function Navbar({
         </button>
 
         <button
-          className="nav-item"
-          onClick={onOpenDbModal}
+          className={`nav-item ${isDbModalOpen ? 'active' : ''}`}
+          onClick={onToggleDbModal}
           title="Base de Datos"
           style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
