@@ -272,6 +272,7 @@ export default function App() {
           }
         }}
         bookmarksCount={bookmarks.length}
+        isBookmarksActive={showOnlyBookmarks}
         onLogoClick={handleLogoClick}
         isDbModalOpen={isDbModalOpen}
         onToggleDbModal={() => setIsDbModalOpen(!isDbModalOpen)}

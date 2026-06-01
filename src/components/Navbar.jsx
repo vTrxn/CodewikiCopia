@@ -5,6 +5,7 @@ export default function Navbar({
   activeTab, 
   setActiveTab, 
   bookmarksCount, 
+  isBookmarksActive,
   onLogoClick, 
   isDbModalOpen,
   onToggleDbModal, 
@@ -91,11 +92,11 @@ export default function Navbar({
       <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '200px', justifyContent: 'flex-end' }}>
         {bookmarksCount > 0 && (
           <button
-            className={`nav-item ${activeTab === 'dashboard' && bookmarksCount > 0 ? 'active' : ''}`}
+            className={`nav-item ${isBookmarksActive ? 'active' : ''}`}
             onClick={onBookmarksClick}
             title="Marcadores"
           >
-            <Bookmark size={22} fill={activeTab === 'dashboard' && bookmarksCount > 0 ? "currentColor" : "none"} />
+            <Bookmark size={22} fill={isBookmarksActive ? "currentColor" : "none"} />
           </button>
         )}
         
