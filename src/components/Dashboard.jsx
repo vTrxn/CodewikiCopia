@@ -55,7 +55,7 @@ export default function Dashboard({
       }}>
         <div style={{ padding: '24px 16px' }}>
            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
-              Explorar CodeWiki
+              Explorar fUSphere
            </h4>
            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px', margin: 0, padding: 0 }}>
               <li 
@@ -96,14 +96,14 @@ export default function Dashboard({
           {/* Breadcrumb / Title */}
           <div style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '12px' }}>
-              <span>CodeWiki</span>
+              <span>fUSphere</span>
               <ChevronRight size={14} />
               <span style={{ color: 'var(--text-secondary)' }}>
                 {showOnlyBookmarks ? 'Marcadores' : activeCategory}
               </span>
             </div>
             <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.25rem', fontWeight: 400, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
-              {showOnlyBookmarks ? 'Tus Marcadores' : (activeCategory === 'Todos' ? 'Bienvenido a CodeWiki' : activeCategory)}
+              {showOnlyBookmarks ? 'Tus Marcadores' : (activeCategory === 'Todos' ? 'Bienvenido a fUSphere' : activeCategory)}
             </h1>
           </div>
 

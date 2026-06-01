@@ -243,7 +243,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'codewiki-template-db.json';
+    a.download = 'fusphere-template-db.json';
     a.click();
     URL.revokeObjectURL(url);
   };

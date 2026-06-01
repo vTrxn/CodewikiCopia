@@ -65,7 +65,7 @@ export default function Navbar({
           <Search size={20} style={{ color: 'var(--text-muted)', marginRight: '12px' }} />
           <input 
             type="text" 
-            placeholder="Buscar en CodeWiki" 
+            placeholder="Buscar en fUSphere" 
             style={{
               flex: 1,
               background: 'transparent',
