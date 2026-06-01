@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import ChatbotPanel from './ChatbotPanel';
 import MarkdownRenderer from './MarkdownRenderer';
 import { 
   User, 
@@ -308,8 +308,9 @@ Instrucciones IMPORTANTES para tu formato:
         </ul>
       </div>
 
-      <div className="viewer-content-container animate-fade-in">
-        <div className="viewer-article-body">
+      <div style={{ display: 'flex', width: '100%', height: '100%', overflow: 'hidden' }}>
+        <div className="viewer-content-container animate-fade-in" style={{ flex: '1', overflowY: 'auto' }}>
+          <div className="viewer-article-body">
 
           {/* Simple and friendly Wiki-style Header */}
           <div className="wiki-header-simple">
@@ -487,8 +488,12 @@ Instrucciones IMPORTANTES para tu formato:
             </div>
           </div>
         </div>
-
-        {/* Outline removed from right side as it is now in the left sidebar */}
+        </div>
+        <ChatbotPanel 
+          isOpen={true}
+          contextArticle={activeArticle}
+          onOpenInPlayground={onOpenInPlayground}
+        />
       </div>
     </div>
   );

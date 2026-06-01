@@ -123,14 +123,12 @@ export default function App() {
     setActiveArticle(savedArticle);
     setEditingArticle(null);
     setActiveTab('viewer');
-    setIsChatbotOpen(true);
   };
 
   // 4. Open Article Helper
   const handleSelectArticle = (article) => {
     setActiveArticle(article);
     setActiveTab('viewer');
-    setIsChatbotOpen(true);
   };
 
   // 5. Code Playground Launcher Helper
@@ -369,23 +367,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Floating AI Coding Tutor Toggle */}
-      <button 
-        className="chatbot-trigger-btn animate-fade-in"
-        onClick={() => setIsChatbotOpen(true)}
-        title="Preguntar al Tutor AI"
-      >
-        <MessageSquare size={26} />
-      </button>
 
-      {/* Slide-out Tutor Panel Overlay */}
-      <ChatbotPanel 
-        isOpen={isChatbotOpen}
-        onClose={() => setIsChatbotOpen(false)}
-        articles={articles}
-        onOpenArticle={handleSelectArticle}
-        onOpenInPlayground={handleOpenInPlayground}
-      />
 
       {/* Database Management Modal */}
       {isDbModalOpen && (

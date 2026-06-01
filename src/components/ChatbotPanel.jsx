@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react';
 import { Send, X, Bot, Play } from 'lucide-react';
 import MarkdownRenderer from './MarkdownRenderer';
 
-export default function ChatbotPanel({ isOpen, onClose, articles, onOpenArticle, onOpenInPlayground }) {
+export default function ChatbotPanel({ isOpen, contextArticle, onOpenInPlayground }) {
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       sender: 'bot',
-      text: '¡Hola! Soy el Asistente Académico de fUSphere. Puedes preguntarme sobre conceptos de programación, pedirme que te explique un código o que te recomiende repositorios sobre temas específicos como React, Express, PostgreSQL, QuickSort, Listas Enlazadas o Clean Architecture.'
+      text: contextArticle ? `¡Hola! Soy el Tutor fUSphere AI. Veo que estás explorando **${contextArticle.title}**. ¿Tienes alguna pregunta sobre este repositorio o su código?` : '¡Hola! Soy el Tutor fUSphere AI. ¿En qué te puedo ayudar?'
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -175,8 +175,7 @@ IMPORTANTE:
   };
 
   return (
-    <div className="chatbot-panel-overlay animate-fade-in" onClick={onClose}>
-      <div className="chatbot-panel" onClick={(e) => e.stopPropagation()}>
+      <div className="chatbot-panel" onClick={(e) => e.stopPropagation()} style={{ flex: '0 0 350px', display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--card-border)' }}>
         <div className="chatbot-header">
           <div className="chatbot-header-info">
             <div className="chatbot-avatar">
@@ -190,9 +189,6 @@ IMPORTANTE:
               </div>
             </div>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-            <X size={20} />
-          </button>
         </div>
 
         <div className="chatbot-messages">
@@ -213,7 +209,6 @@ IMPORTANTE:
                     <button 
                       onClick={() => {
                         onOpenInPlayground(msg.snippet);
-                        onClose();
                       }}
                       className="btn btn-secondary" 
                       style={{ padding: '4px 10px', fontSize: '0.75rem', marginTop: '6px', gap: '4px' }}
@@ -225,23 +220,6 @@ IMPORTANTE:
                 </div>
               )}
 
-              {msg.article && (
-                <div style={{ marginTop: '12px', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '8px' }}>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
-                    Repositorio Recomendado:
-                  </span>
-                  <button 
-                    onClick={() => {
-                      onOpenArticle(msg.article);
-                      onClose();
-                    }}
-                    className="btn btn-primary"
-                    style={{ padding: '6px 12px', fontSize: '0.8rem', width: '100%', justifyContent: 'center' }}
-                  >
-                    Explorar "{msg.article.title}"
-                  </button>
-                </div>
-              )}
             </div>
           ))}
           
@@ -269,6 +247,5 @@ IMPORTANTE:
           </button>
         </form>
       </div>
-    </div>
   );
 }
