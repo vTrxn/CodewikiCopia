@@ -61,6 +61,8 @@ export default function App() {
   const [playgroundCode, setPlaygroundCode] = useState('');
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isDbModalOpen, setIsDbModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Keep search/filter states synced when returning to Dashboard
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -127,6 +129,7 @@ export default function App() {
     setActiveCategory('Todos');
     setDifficultyFilter([]);
     setShowOnlyBookmarks(false);
+    setSearchQuery('');
   };
 
   // 7. Delete Article Helper
@@ -251,9 +254,12 @@ export default function App() {
           setActiveTab('dashboard');
           setShowOnlyBookmarks(true);
         }}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {activeTab === 'dashboard' && (
           <Dashboard 
             articles={articles}
@@ -270,6 +276,9 @@ export default function App() {
             setDifficultyFilter={setDifficultyFilter}
             showOnlyBookmarks={showOnlyBookmarks}
             setShowOnlyBookmarks={setShowOnlyBookmarks}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            isSidebarOpen={isSidebarOpen}
           />
         )}
 
@@ -281,6 +290,8 @@ export default function App() {
             onBackToDashboard={() => setActiveTab('dashboard')}
             isBookmarked={bookmarks.includes(activeArticle.id)}
             onToggleBookmark={handleToggleBookmark}
+            isSidebarOpen={isSidebarOpen}
+            setIsSidebarOpen={setIsSidebarOpen}
             onEditArticle={() => {
               if (activeArticle && !activeArticle.isUserOwned) {
                 alert('No puedes editar repositorios que no sean de tu propiedad.');

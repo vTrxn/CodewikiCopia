@@ -9,7 +9,6 @@ import {
   Trash2, 
   Menu, 
   GitBranch, 
-  Copy, 
   Sparkles, 
   AlertCircle,
   ArrowLeft,
@@ -21,12 +20,13 @@ export default function ArticleViewer({
   onBackToDashboard, 
   isBookmarked, 
   onToggleBookmark,
+  isSidebarOpen,
+  setIsSidebarOpen,
   onEditArticle,
   onOpenInPlayground,
   onDeleteArticle,
   onSaveArticle
 }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeViewTab, setActiveViewTab] = useState('readme'); // 'readme' or 'ai-analysis'
   const [copiedCommit, setCopiedCommit] = useState(false);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
@@ -270,9 +270,9 @@ Instrucciones IMPORTANTES para tu formato:
 
       {/* Dynamic Outline Sidebar on the Left (No Folders, GitHub layout style) */}
       <div className={`sidebar-nav ${isSidebarOpen ? 'open' : ''}`}>
-        {/* Mobile Drawer Header */}
-        <div className="sidebar-mobile-header" style={{ display: 'none', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <span className="sidebar-title" style={{ margin: 0 }}>Contenido</span>
+        {/* Drawer Header (Always visible when open) */}
+        <div className="sidebar-mobile-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <span className="sidebar-title" style={{ margin: 0 }}>Índice</span>
           <button 
             onClick={() => setIsSidebarOpen(false)}
             style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}
@@ -299,7 +299,6 @@ Instrucciones IMPORTANTES para tu formato:
               className={`outline-item h${item.level}`}
               onClick={() => {
                 scrollToHeading(item.id);
-                setIsSidebarOpen(false); // Close mobile drawer on click
               }}
               style={{ cursor: 'pointer', marginBottom: '8px' }}
             >
@@ -311,20 +310,18 @@ Instrucciones IMPORTANTES para tu formato:
 
       <div className="viewer-content-container animate-fade-in">
         <div className="viewer-article-body">
-          {/* Mobile Sidebar Toggle Button */}
-          <button 
-            className="mobile-sidebar-toggle"
-            onClick={() => setIsSidebarOpen(true)}
-            title="Ver Contenido"
-          >
-            <Menu size={16} />
-            <span>Ver Contenido</span>
-          </button>
 
           {/* Simple and friendly Wiki-style Header */}
           <div className="wiki-header-simple">
             <div className="wiki-breadcrumb">
-              <span className="wiki-breadcrumb-item">Repositorios</span>
+              <span 
+                className="wiki-breadcrumb-item highlight" 
+                style={{ cursor: 'pointer' }}
+                onClick={onBackToDashboard}
+                title="Volver a Repositorios"
+              >
+                Repositorios
+              </span>
               <span className="breadcrumb-separator">/</span>
               <span className="wiki-breadcrumb-item highlight">{activeArticle.category}</span>
             </div>
@@ -356,7 +353,7 @@ Instrucciones IMPORTANTES para tu formato:
               <div className="wiki-meta-right">
                 <span className="wiki-meta-item ai-powered-badge" title="La IA analiza la información y estructura de este repositorio.">
                   <Sparkles size={12} style={{ color: 'var(--accent-secondary)' }} />
-                  <span>Groq Powered by Gemini</span>
+                  <span>Powered by Groq</span>
                 </span>
               </div>
             </div>
@@ -366,7 +363,7 @@ Instrucciones IMPORTANTES para tu formato:
           <div className="viewer-header-meta" style={{ marginTop: '16px', borderTop: 'none', paddingTop: 0 }}>
             <div className="gemini-mistakes-footnote">
               <AlertCircle size={12} style={{ color: 'var(--text-muted)' }} />
-              <span>Gemini can make mistakes, so double-check it.</span>
+              <span>Groq puede cometer errores, revisa la información.</span>
             </div>
             
             <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
@@ -417,7 +414,7 @@ Instrucciones IMPORTANTES para tu formato:
               className={`viewer-tab ${activeViewTab === 'ai-analysis' ? 'active' : ''}`}
               onClick={() => setActiveViewTab('ai-analysis')}
             >
-              Estructura por IA (Gemini Core)
+              Estructura por IA (Groq)
             </button>
           </div>
 

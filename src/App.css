@@ -101,52 +101,7 @@
   line-height: 1.5;
 }
 
-/* Live Search Container */
-.search-bar-wrapper {
-  max-width: 540px;
-  margin: 0 auto 32px;
-  position: relative;
-}
-
-.search-input-container {
-  display: flex;
-  align-items: center;
-  background: var(--bg-secondary);
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 4px 12px 4px 16px;
-  transition: all var(--transition-fast);
-}
-
-.search-input-container:focus-within {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-}
-
-.search-icon {
-  color: var(--text-muted);
-  margin-right: 12px;
-  transition: color var(--transition-fast);
-}
-
-.search-input-container:focus-within .search-icon {
-  color: var(--accent-primary);
-}
-
-.search-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.05rem;
-  padding: 12px 0;
-  outline: none;
-  font-family: var(--font-sans);
-}
-
-.search-input::placeholder {
-  color: var(--text-muted);
-}
+/* Removed search bar wrapper since it is now in Navbar */
 
 /* Category Filters */
 .category-pills {
@@ -242,28 +197,25 @@
 }
 
 .article-card {
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  height: 220px;
+  height: 240px;
   cursor: pointer;
   text-align: left;
-  border-radius: 8px;
-  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
-  box-shadow: none;
+  box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
   position: relative;
   overflow: hidden;
 }
 
 .article-card:hover {
-  border-color: var(--accent-primary);
-  background: var(--bg-tertiary);
-}
-
-.article-card:hover::before {
-  opacity: 1;
+  border-color: var(--card-border-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
 .article-meta-row {
@@ -344,6 +296,9 @@
   flex: 1;
   width: 100%;
   position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .sidebar-nav {
@@ -353,13 +308,18 @@
   display: flex;
   flex-direction: column;
   padding: 24px 16px;
-  position: sticky;
-  top: 73px; /* Stays fixed below navbar while main article scrolls */
-  height: calc(100vh - 73px);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  left: -280px;
   overflow-y: auto;
-  flex-shrink: 0;
-  z-index: 10;
-  transition: transform var(--transition-normal), left var(--transition-normal);
+  z-index: 50;
+  transition: left 0.3s ease;
+}
+.sidebar-nav.open {
+  left: 0;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.1);
 }
 
 .sidebar-title {
@@ -428,6 +388,8 @@
   flex: 1;
   display: flex;
   min-width: 0; /* Prevents flex-item content blowout */
+  height: 100%;
+  overflow-y: auto;
 }
 
 .viewer-article-body {
@@ -444,6 +406,7 @@
 .viewer-header-meta {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   margin-bottom: 20px;
   font-size: 0.85rem;
@@ -469,7 +432,28 @@
 
 /* Mobile Sidebar Drawer styling & trigger button */
 .mobile-sidebar-toggle {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 30px;
+  color: #a5b4fc;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: all var(--transition-fast);
+  align-self: flex-start;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.mobile-sidebar-toggle:hover {
+  background: rgba(139, 92, 246, 0.15);
+  border-color: rgba(139, 92, 246, 0.4);
+  transform: translateY(-1px);
 }
 
 .mobile-sidebar-overlay {
@@ -506,31 +490,6 @@
 
   .sidebar-mobile-header {
     display: flex !important;
-  }
-
-  .mobile-sidebar-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: rgba(139, 92, 246, 0.08);
-    border: 1px solid rgba(139, 92, 246, 0.25);
-    border-radius: 30px;
-    color: #a5b4fc;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    margin-bottom: 24px;
-    transition: all var(--transition-fast);
-    align-self: flex-start;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
-  }
-
-  .mobile-sidebar-toggle:hover {
-    background: rgba(139, 92, 246, 0.15);
-    border-color: rgba(139, 92, 246, 0.4);
-    transform: translateY(-1px);
   }
 
   .mobile-sidebar-overlay {

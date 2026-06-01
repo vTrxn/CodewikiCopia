@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import ArticleCard from './ArticleCard';
-import { Search, PlusCircle, Bookmark, Compass, RefreshCw } from 'lucide-react';
+import { PlusCircle, Compass, RefreshCw, ChevronRight } from 'lucide-react';
 
 export default function Dashboard({ 
   articles, 
@@ -13,26 +12,15 @@ export default function Dashboard({
   difficultyFilter,
   setDifficultyFilter,
   showOnlyBookmarks,
-  setShowOnlyBookmarks
+  setShowOnlyBookmarks,
+  searchQuery,
+  setSearchQuery,
+  isSidebarOpen
 }) {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Get unique categories
-  const categoriesList = ['Todos', 'Frontend', 'Backend', 'Estructuras de Datos', 'Algoritmos', 'Ingeniería de Software'];
-
-  // Handle difficulties toggles
-  const handleDifficultyToggle = (diff) => {
-    if (difficultyFilter.includes(diff)) {
-      setDifficultyFilter(difficultyFilter.filter(d => d !== diff));
-    } else {
-      setDifficultyFilter([...difficultyFilter, diff]);
-    }
-  };
 
   // Filter logic
   const filteredArticles = articles.filter(art => {
-    // 1. Search Query
-    const query = searchQuery.toLowerCase().trim();
+    const query = searchQuery ? searchQuery.toLowerCase().trim() : '';
     const matchesSearch = query === '' || 
       art.title.toLowerCase().includes(query) || 
       art.description.toLowerCase().includes(query) || 
@@ -40,148 +28,172 @@ export default function Dashboard({
       art.tags.some(t => t.toLowerCase().includes(query)) ||
       art.category.toLowerCase().includes(query);
 
-    // 2. Category
     const matchesCategory = activeCategory === 'Todos' || art.category === activeCategory;
-
-    // 3. Difficulty
     const matchesDifficulty = difficultyFilter.length === 0 || difficultyFilter.includes(art.difficulty);
-
-    // 4. Bookmarks Only
     const matchesBookmarks = !showOnlyBookmarks || bookmarks.includes(art.id);
 
     return matchesSearch && matchesCategory && matchesDifficulty && matchesBookmarks;
   });
 
   return (
-    <div className="dashboard-container">
-      {/* Background radial highlight */}
-      <div className="bg-gradient-glow"></div>
-
-      <header className="hero-section">
-        <h1 className="hero-title animate-fade-in">
-          {showOnlyBookmarks ? 'Tus Repositorios Marcados' : 'Repositorios de Código fUSoft / Uniempresarial'}
-        </h1>
-        <p className="hero-subtitle animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          {showOnlyBookmarks 
-            ? 'Colección de tus repositorios guardados para repasar conceptos, algoritmos y sintaxis rápidamente.'
-            : 'La plataforma colaborativa de desarrollo de software. Aprende, explora repositorios funcionales, realiza pruebas en el playground interactivo y estudia con nuestro tutor inteligente.'}
-        </p>
-        
-        <div className="search-bar-wrapper animate-fade-in" style={{ animationDelay: '0.15s' }}>
-          <div className="search-input-container">
-            <Search className="search-icon" size={20} />
-            <input 
-              type="text" 
-              placeholder="Buscar por tema, etiqueta, categoría, autor..." 
-              className="search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
-                style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginRight: '10px' }}
+    <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative' }}>
+      {/* Left Sidebar Menu (Overlay Drawer) */}
+      <div style={{ 
+        width: '280px', 
+        borderRight: '1px solid var(--card-border)',
+        background: 'var(--bg-primary)',
+        overflowY: 'auto',
+        transition: 'left 0.3s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: isSidebarOpen ? '0' : '-280px',
+        zIndex: 50,
+        boxShadow: isSidebarOpen ? '4px 0 15px rgba(0,0,0,0.1)' : 'none'
+      }}>
+        <div style={{ padding: '24px 16px' }}>
+           <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '16px', letterSpacing: '0.5px' }}>
+              Explorar CodeWiki
+           </h4>
+           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px', margin: 0, padding: 0 }}>
+              <li 
+                onClick={() => { setActiveCategory('Todos'); setShowOnlyBookmarks(false); }}
+                style={{ padding: '10px 16px', borderRadius: '4px', cursor: 'pointer', background: activeCategory === 'Todos' && !showOnlyBookmarks ? 'var(--accent-primary-glow)' : 'transparent', color: activeCategory === 'Todos' && !showOnlyBookmarks ? 'var(--accent-primary)' : 'var(--text-primary)', fontWeight: activeCategory === 'Todos' && !showOnlyBookmarks ? 500 : 400, fontSize: '0.95rem' }}
               >
-                Limpiar
-              </button>
-            )}
+                Todos los repositorios
+              </li>
+              <li 
+                onClick={() => { setShowOnlyBookmarks(true); setActiveCategory('Todos'); }}
+                style={{ padding: '10px 16px', borderRadius: '4px', cursor: 'pointer', background: showOnlyBookmarks ? 'var(--accent-primary-glow)' : 'transparent', color: showOnlyBookmarks ? 'var(--accent-primary)' : 'var(--text-primary)', fontWeight: showOnlyBookmarks ? 500 : 400, fontSize: '0.95rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+              >
+                <span>Marcadores</span>
+                {bookmarks.length > 0 && <span style={{ background: 'var(--card-border)', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{bookmarks.length}</span>}
+              </li>
+           </ul>
+           
+           <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '0.85rem', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '32px', marginBottom: '16px', letterSpacing: '0.5px' }}>
+              Categorías
+           </h4>
+           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px', margin: 0, padding: 0 }}>
+              {['Frontend', 'Backend', 'Estructuras de Datos', 'Algoritmos', 'Ingeniería de Software'].map(cat => (
+                <li 
+                  key={cat}
+                  onClick={() => { setActiveCategory(cat); setShowOnlyBookmarks(false); }}
+                  style={{ padding: '10px 16px', borderRadius: '4px', cursor: 'pointer', background: activeCategory === cat && !showOnlyBookmarks ? 'var(--accent-primary-glow)' : 'transparent', color: activeCategory === cat && !showOnlyBookmarks ? 'var(--accent-primary)' : 'var(--text-primary)', fontWeight: activeCategory === cat && !showOnlyBookmarks ? 500 : 400, fontSize: '0.95rem' }}
+                >
+                  {cat}
+                </li>
+              ))}
+           </ul>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '40px', background: 'var(--bg-secondary)', paddingLeft: '40px' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+          {/* Breadcrumb / Title */}
+          <div style={{ marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '12px' }}>
+              <span>CodeWiki</span>
+              <ChevronRight size={14} />
+              <span style={{ color: 'var(--text-secondary)' }}>
+                {showOnlyBookmarks ? 'Marcadores' : activeCategory}
+              </span>
+            </div>
+            <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '2.25rem', fontWeight: 400, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+              {showOnlyBookmarks ? 'Tus Marcadores' : (activeCategory === 'Todos' ? 'Bienvenido a CodeWiki' : activeCategory)}
+            </h1>
           </div>
+
+          {/* Filters Row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px', borderBottom: '1px solid var(--card-border)', paddingBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '0.9rem' }}>
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Dificultad:</span>
+              {['Principiante', 'Intermedio', 'Avanzado'].map((diff) => (
+                <span 
+                  key={diff}
+                  onClick={() => {
+                    if (difficultyFilter.includes(diff)) {
+                      setDifficultyFilter(difficultyFilter.filter(d => d !== diff));
+                    } else {
+                      setDifficultyFilter([...difficultyFilter, diff]);
+                    }
+                  }}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '16px',
+                    cursor: 'pointer',
+                    border: '1px solid',
+                    borderColor: difficultyFilter.includes(diff) ? 'var(--accent-primary)' : 'var(--card-border)',
+                    background: difficultyFilter.includes(diff) ? 'var(--accent-primary-glow)' : 'var(--bg-primary)',
+                    color: difficultyFilter.includes(diff) ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    transition: 'all 0.2s',
+                    fontWeight: difficultyFilter.includes(diff) ? 500 : 400
+                  }}
+                >
+                  {diff}
+                </span>
+              ))}
+            </div>
+
+            <button 
+              onClick={onAddNewArticle}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 20px',
+                background: 'var(--accent-primary)', color: '#fff', borderRadius: '24px',
+                border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 500,
+                boxShadow: '0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15)'
+              }}
+            >
+              <PlusCircle size={18} />
+              Nuevo Repositorio
+            </button>
+          </div>
+
+          {/* Article List */}
+          {filteredArticles.length === 0 ? (
+            <div style={{ padding: '60px 40px', textAlign: 'center', background: 'var(--bg-primary)', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
+              <Compass size={48} style={{ color: 'var(--text-muted)', marginBottom: '16px', margin: '0 auto' }} />
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '8px', color: 'var(--text-primary)', fontWeight: 500 }}>
+                No se encontraron resultados
+              </h3>
+              <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', maxWidth: '400px', margin: '0 auto 20px' }}>
+                No hay repositorios que coincidan con los filtros actuales o la búsqueda.
+              </p>
+              <button 
+                onClick={() => {
+                  if(setSearchQuery) setSearchQuery('');
+                  setActiveCategory('Todos');
+                  setDifficultyFilter([]);
+                  setShowOnlyBookmarks(false);
+                }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 16px',
+                  background: 'transparent', border: '1px solid var(--card-border)', color: 'var(--text-primary)',
+                  borderRadius: '4px', cursor: 'pointer', fontWeight: 500
+                }}
+              >
+                <RefreshCw size={16} />
+                Limpiar Filtros
+              </button>
+            </div>
+          ) : (
+            <div className="articles-grid">
+              {filteredArticles.map((art) => (
+                <ArticleCard 
+                  key={art.id} 
+                  article={art} 
+                  onClick={() => onSelectArticle(art)}
+                  isBookmarked={bookmarks.includes(art.id)}
+                  onToggleBookmark={onToggleBookmark}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      </header>
-
-      {/* Categories Horizontal Scroller / Pills */}
-      <section className="category-pills animate-fade-in" style={{ animationDelay: '0.2s' }}>
-        {categoriesList.map((cat) => (
-          <button
-            key={cat}
-            className={`category-pill ${activeCategory === cat ? 'active' : ''}`}
-            onClick={() => {
-              setActiveCategory(cat);
-              setShowOnlyBookmarks(false); // Reset bookmarks toggle
-            }}
-          >
-            {cat}
-          </button>
-        ))}
-      </section>
-
-      {/* Filters Toolbar */}
-      <section className="difficulty-filters animate-fade-in" style={{ animationDelay: '0.25s' }}>
-        <span className="difficulty-label">Filtrar Dificultad:</span>
-        {['Principiante', 'Intermedio', 'Avanzado'].map((diff) => (
-          <span 
-            key={diff}
-            className={`difficulty-checkbox-btn ${diff} ${difficultyFilter.includes(diff) ? 'active' : ''}`}
-            onClick={() => handleDifficultyToggle(diff)}
-          >
-            {diff}
-          </span>
-        ))}
-
-        <div style={{ width: '1px', height: '20px', background: 'var(--card-border)', margin: '0 8px' }}></div>
-
-        <button 
-          className={`btn ${showOnlyBookmarks ? 'btn-accent' : 'btn-secondary'}`}
-          style={{ padding: '6px 12px', fontSize: '0.85rem' }}
-          onClick={() => {
-            setShowOnlyBookmarks(!showOnlyBookmarks);
-            setActiveCategory('Todos'); // Reset categories
-          }}
-        >
-          <Bookmark size={14} fill={showOnlyBookmarks ? 'currentColor' : 'none'} />
-          <span>{showOnlyBookmarks ? 'Viendo Guardados' : 'Ver Guardados'}</span>
-        </button>
-
-        <button 
-          className="btn btn-primary"
-          style={{ padding: '6px 12px', fontSize: '0.85rem', marginLeft: 'auto' }}
-          onClick={onAddNewArticle}
-        >
-          <PlusCircle size={14} />
-          <span>Registrar Repositorio</span>
-        </button>
-      </section>
-
-      {/* Articles Rendering */}
-      {filteredArticles.length === 0 ? (
-        <div 
-          className="empty-state-panel animate-fade-in" 
-          style={{ padding: '60px 40px', textAlign: 'center', color: 'var(--text-secondary)' }}
-        >
-          <Compass size={40} style={{ color: 'var(--text-muted)', marginBottom: '16px' }} />
-          <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', marginBottom: '8px', color: 'var(--text-primary)' }}>
-            No se encontraron repositorios
-          </h3>
-          <p style={{ fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto 20px' }}>
-            Prueba ajustando los filtros de búsqueda, categorías, dificultad o registra uno nuevo para poblar la plataforma.
-          </p>
-          <button 
-            className="btn btn-secondary"
-            onClick={() => {
-              setSearchQuery('');
-              setActiveCategory('Todos');
-              setDifficultyFilter([]);
-              setShowOnlyBookmarks(false);
-            }}
-            style={{ fontSize: '0.85rem' }}
-          >
-            <RefreshCw size={14} />
-            <span>Restablecer Filtros</span>
-          </button>
-        </div>
-      ) : (
-        <div className="articles-grid">
-          {filteredArticles.map((art) => (
-            <ArticleCard 
-              key={art.id} 
-              article={art} 
-              onClick={() => onSelectArticle(art)}
-              isBookmarked={bookmarks.includes(art.id)}
-              onToggleBookmark={onToggleBookmark}
-            />
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 }
