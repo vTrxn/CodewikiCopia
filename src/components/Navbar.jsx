@@ -1,4 +1,4 @@
-import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X } from 'lucide-react';
+import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
@@ -9,7 +9,9 @@ export default function Navbar({
   onBookmarksClick,
   searchQuery,
   setSearchQuery,
-  onToggleSidebar 
+  onToggleSidebar,
+  theme,
+  onToggleTheme
 }) {
   return (
     <nav className="navbar" style={{
@@ -119,6 +121,15 @@ export default function Navbar({
           style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
           <Database size={22} />
+        </button>
+
+        <button
+          className="nav-item"
+          onClick={onToggleTheme}
+          title={theme === 'dark' ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
+          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
+        >
+          {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
         </button>
 
         <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', marginLeft: '8px', fontSize: '0.9rem' }}>

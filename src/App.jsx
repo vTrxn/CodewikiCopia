@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import ArticleViewer from './components/ArticleViewer';
@@ -62,7 +62,20 @@ export default function App() {
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isDbModalOpen, setIsDbModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('fusoft_theme') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('fusoft_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   // Keep search/filter states synced when returning to Dashboard
   const [activeCategory, setActiveCategory] = useState('Todos');
@@ -246,7 +259,7 @@ export default function App() {
           if (tab === 'dashboard') {
             setShowOnlyBookmarks(false); // Reset bookmarks view
           }
-        }} 
+        }}
         bookmarksCount={bookmarks.length}
         onLogoClick={handleLogoClick}
         onOpenDbModal={() => setIsDbModalOpen(true)}
@@ -257,6 +270,8 @@ export default function App() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
