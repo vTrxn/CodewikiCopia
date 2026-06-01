@@ -1,4 +1,5 @@
-import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon } from 'lucide-react';
+import { useState } from 'react';
+import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon, LogOut, Settings, User } from 'lucide-react';
 
 export default function Navbar({
   activeTab, 
@@ -14,6 +15,8 @@ export default function Navbar({
   theme,
   onToggleTheme
 }) {
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
   return (
     <nav className="navbar" style={{
       display: 'flex',
@@ -91,9 +94,8 @@ export default function Navbar({
             className={`nav-item ${activeTab === 'dashboard' && bookmarksCount > 0 ? 'active' : ''}`}
             onClick={onBookmarksClick}
             title="Marcadores"
-            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
           >
-            <Bookmark size={22} fill="var(--accent-secondary)" color="var(--accent-secondary)" />
+            <Bookmark size={22} fill={activeTab === 'dashboard' && bookmarksCount > 0 ? "currentColor" : "none"} />
           </button>
         )}
         
@@ -101,7 +103,6 @@ export default function Navbar({
           className={`nav-item ${activeTab === 'editor' ? 'active' : ''}`}
           onClick={() => setActiveTab('editor')}
           title="Crear Repositorio"
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
           <PlusCircle size={22} />
         </button>
@@ -110,7 +111,6 @@ export default function Navbar({
           className={`nav-item ${activeTab === 'playground' ? 'active' : ''}`}
           onClick={() => setActiveTab('playground')}
           title="Playground"
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
           <Code size={22} />
         </button>
@@ -119,7 +119,6 @@ export default function Navbar({
           className={`nav-item ${isDbModalOpen ? 'active' : ''}`}
           onClick={onToggleDbModal}
           title="Base de Datos"
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
           <Database size={22} />
         </button>
@@ -128,13 +127,63 @@ export default function Navbar({
           className="nav-item"
           onClick={onToggleTheme}
           title={theme === 'dark' ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
-          style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', padding: '8px', borderRadius: '50%' }}
         >
           {theme === 'dark' ? <Sun size={22} /> : <Moon size={22} />}
         </button>
 
-        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', marginLeft: '8px', fontSize: '0.9rem' }}>
-          U
+        <div style={{ position: 'relative', marginLeft: '8px' }}>
+          <div 
+            onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+            style={{ 
+              width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent-primary)', color: '#fff', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '500', fontSize: '0.9rem', cursor: 'pointer' 
+            }}
+          >
+            U
+          </div>
+          
+          {isUserMenuOpen && (
+            <>
+              <div 
+                style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99 }} 
+                onClick={() => setIsUserMenuOpen(false)}
+              />
+              <div style={{
+                position: 'absolute',
+                top: 'calc(100% + 8px)',
+                right: 0,
+                width: '200px',
+                background: 'var(--card-bg)',
+                border: '1px solid var(--card-border)',
+                borderRadius: 'var(--radius-md)',
+                boxShadow: 'var(--shadow-lg)',
+                zIndex: 100,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--card-border)' }}>
+                  <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>Usuario Local</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>usuario@uniempresarial.edu.co</div>
+                </div>
+                <div style={{ padding: '8px' }}>
+                  <button className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                    <User size={16} />
+                    <span>Mi Perfil</span>
+                  </button>
+                  <button className="dropdown-item" onClick={() => setIsUserMenuOpen(false)}>
+                    <Settings size={16} />
+                    <span>Configuración</span>
+                  </button>
+                  <div style={{ height: '1px', background: 'var(--card-border)', margin: '4px 0' }} />
+                  <button className="dropdown-item" onClick={() => setIsUserMenuOpen(false)} style={{ color: 'var(--accent-secondary)' }}>
+                    <LogOut size={16} />
+                    <span>Cerrar Sesión</span>
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </nav>
