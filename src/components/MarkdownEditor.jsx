@@ -100,7 +100,7 @@ Instrucciones IMPORTANTES para tu formato:
             'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: 'llama-3.1-8b-instant',
             messages: [
               {
                 role: 'system',
@@ -112,7 +112,7 @@ Instrucciones IMPORTANTES para tu formato:
               }
             ],
             temperature: 0.3,
-            max_tokens: 2048
+            max_tokens: 1500
           })
         });
 

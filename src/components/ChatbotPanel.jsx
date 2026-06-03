@@ -97,8 +97,8 @@ export default function ChatbotPanel({ articles = [], contextArticle, onOpenInPl
 
     // Call Real Groq API
     try {
-      // Build conversation history for context
-      const chatHistory = messages.map(msg => ({
+      // Build conversation history for context (limit to last 6 messages to avoid TPM/RPM rate limits)
+      const chatHistory = messages.slice(-6).map(msg => ({
         role: msg.sender === 'user' ? 'user' : 'assistant',
         content: msg.text
       }));
@@ -125,10 +125,10 @@ IMPORTANTE:
           'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'llama-3.1-8b-instant',
           messages: chatHistory,
           temperature: 0.7,
-          max_tokens: 1024
+          max_tokens: 800
         })
       });
 

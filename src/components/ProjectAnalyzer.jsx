@@ -542,18 +542,22 @@ export default function ProjectAnalyzer({ onSaveArticle, onOpenInPlayground, onB
     };
   };
 
-  // Helper to extract key source files to feed the LLM context
+  // Helper to extract key source files to feed the LLM context (optimized for low TPM rate limits)
   const getContextFilesSummary = () => {
     let result = `Nombre del Proyecto: ${projectName}\n`;
     result += `Estructura de archivos:\n`;
     
-    files.forEach(f => {
+    // Limit file listing to first 25 files to save input tokens
+    const visibleFiles = files.slice(0, 25);
+    visibleFiles.forEach(f => {
       result += `- ${f.path} (${f.size} bytes)\n`;
     });
+    if (files.length > 25) {
+      result += `- ... y ${files.length - 25} archivos más.\n`;
+    }
 
     result += `\n--- CONTENIDO DE ARCHIVOS CLAVE ---\n`;
 
-    // Intentar leer package.json, requirements.txt, y los principales archivos de código
     const keyFiles = files.filter(f => 
       f.name === 'package.json' || 
       f.name === 'requirements.txt' || 
@@ -570,30 +574,29 @@ export default function ProjectAnalyzer({ onSaveArticle, onOpenInPlayground, onB
       f.name.endsWith('.sql')
     );
 
-    // Si no encuentra específicos, tomar los 3 archivos de código más grandes
     let selectedForContext = [...keyFiles];
-    if (selectedForContext.length < 3) {
+    if (selectedForContext.length < 2) {
       const codeFiles = files.filter(f => {
         const ext = f.name.split('.').pop().toLowerCase();
         return ['js', 'jsx', 'ts', 'tsx', 'py', 'java', 'php', 'go', 'html', 'css'].includes(ext);
       });
       codeFiles.sort((a, b) => b.size - a.size);
       
-      codeFiles.slice(0, 3).forEach(cf => {
+      codeFiles.slice(0, 2).forEach(cf => {
         if (!selectedForContext.some(f => f.path === cf.path)) {
           selectedForContext.push(cf);
         }
       });
     }
 
-    // Limitar tamaño para evitar sobrecargar tokens y evitar Rate Limits (TPM)
+    // Limit snippet size strictly to avoid token inflation and Rate Limits (TPM)
     let charCount = 0;
-    selectedForContext.forEach(kf => {
-      if (charCount > 2000) return;
-      const snippet = kf.content.slice(0, 500);
+    for (const kf of selectedForContext) {
+      if (charCount > 1000) break;
+      const snippet = kf.content.slice(0, 300);
       result += `\nArchivo: [${kf.path}]\n\`\`\`\n${snippet}\n\`\`\`\n`;
       charCount += snippet.length;
-    });
+    }
 
     return result;
   };
@@ -667,7 +670,7 @@ export default function ProjectAnalyzer({ onSaveArticle, onOpenInPlayground, onB
             }
           ],
           temperature: 0.4,
-          max_tokens: 3000
+          max_tokens: 1200
         })
       });
 
