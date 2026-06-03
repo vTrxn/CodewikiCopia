@@ -5,6 +5,7 @@ import ArticleViewer from './components/ArticleViewer';
 import MarkdownEditor from './components/MarkdownEditor';
 import CodePlayground from './components/CodePlayground';
 import ChatbotPanel from './components/ChatbotPanel';
+import ProjectAnalyzer from './components/ProjectAnalyzer';
 import initialData from './data/initialData.json';
 import { MessageSquare, Database, Download, Upload, RefreshCw, X } from 'lucide-react';
 import './App.css';
@@ -363,6 +364,14 @@ export default function App() {
             key={playgroundCode || 'default'}
             initialCode={playgroundCode}
             onBackToArticle={activeArticle ? () => setActiveTab('viewer') : null}
+          />
+        )}
+
+        {activeTab === 'analyzer' && (
+          <ProjectAnalyzer 
+            onSaveArticle={handleSaveArticle}
+            onOpenInPlayground={handleOpenInPlayground}
+            onBackToDashboard={() => setActiveTab('dashboard')}
           />
         )}
       </main>

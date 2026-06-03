@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon, LogOut, Settings, User } from 'lucide-react';
+import { BookOpen, Code, PlusCircle, Bookmark, Database, Menu, Search, X, Sun, Moon, LogOut, Settings, User, UploadCloud } from 'lucide-react';
 
 export default function Navbar({
   activeTab, 
@@ -94,6 +94,14 @@ export default function Navbar({
           </button>
         )}
         
+        <button
+          className={`nav-item ${activeTab === 'analyzer' ? 'active' : ''}`}
+          onClick={() => setActiveTab('analyzer')}
+          title="Analizador de Proyectos"
+        >
+          <UploadCloud size={22} />
+        </button>
+
         <button
           className={`nav-item ${activeTab === 'editor' ? 'active' : ''}`}
           onClick={() => setActiveTab('editor')}
