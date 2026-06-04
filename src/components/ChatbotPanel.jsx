@@ -172,12 +172,30 @@ IMPORTANTE:
     }
   };
 
+  const theme = document.documentElement.getAttribute('data-theme') || 'light';
+
   return (
       <div className="chatbot-widget animate-fade-in" onClick={(e) => e.stopPropagation()} style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '400px', height: '100%', display: 'flex', flexDirection: 'column', borderLeft: '1px solid var(--card-border)', background: 'var(--bg-secondary)', zIndex: 9999, boxShadow: '-10px 0 40px rgba(0,0,0,0.3)' }}>
         <div className="chatbot-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="chatbot-header-info">
-            <div className="chatbot-avatar">
-              <Bot size={20} />
+            <div className="chatbot-avatar" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              padding: '4px',
+              background: 'transparent'
+            }}>
+              <img 
+                src="/fUSoft_isotipo.png" 
+                alt="Tutor Logo" 
+                style={{ 
+                  height: '24px', 
+                  width: '24px', 
+                  objectFit: 'contain',
+                  filter: theme === 'dark' ? 'brightness(1.5) drop-shadow(0 0 4px rgba(255,255,255,0.2))' : 'none',
+                  transition: 'all 0.3s ease'
+                }} 
+              />
             </div>
             <div>
               <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1rem', fontWeight: 600 }}>Tutor fUSphere AI</h3>

@@ -33,11 +33,26 @@ export default function Navbar({
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '200px' }}>
 
-        <div className="logo-container" onClick={onLogoClick} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-          <div style={{ color: 'var(--accent-primary)', display: 'flex' }}>
-            <BookOpen size={28} />
-          </div>
-          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 500, fontSize: '1.25rem', color: 'var(--text-secondary)' }}>
+        <div className="logo-container" onClick={onLogoClick} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+          <img 
+            src="/fUSoft_isotipo.png" 
+            alt="fUSoft Isotipo" 
+            style={{ 
+              height: '32px', 
+              width: 'auto', 
+              objectFit: 'contain',
+              filter: theme === 'dark' ? 'brightness(1.5) drop-shadow(0 0 4px rgba(255,255,255,0.2))' : 'none',
+              transition: 'all 0.3s ease'
+            }} 
+          />
+          <span style={{ 
+            fontFamily: 'var(--font-heading)', 
+            fontWeight: 800, 
+            fontSize: '1.4rem', 
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.03em',
+            transition: 'color var(--transition-fast)'
+          }}>
             fUSphere
           </span>
         </div>

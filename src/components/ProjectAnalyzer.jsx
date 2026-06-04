@@ -32,7 +32,7 @@ export default function ProjectAnalyzer({ onSaveArticle, onOpenInPlayground, onB
     const [selectedModel, setSelectedModel] = useState(() => localStorage.getItem('fusoft_groq_model') || 'llama-3.1-8b-instant');
 
     // API Key state
-    const [apiKey, setApiKey] = useState(() => localStorage.getItem('fusoft_groq_api_key') || '');
+    const [apiKey, setApiKey] = useState(() => import.meta.env.VITE_GROQ_API_KEY || localStorage.getItem('fusoft_groq_api_key') || '');
     const [apiKeyInput, setApiKeyInput] = useState(apiKey);
     const [showKeySettings, setShowKeySettings] = useState(false);
 
@@ -614,7 +614,7 @@ export default function ProjectAnalyzer({ onSaveArticle, onOpenInPlayground, onB
       setLoadingStep('Generando guía de documentación y Wiki académica...');
     }
 
-    const activeKey = apiKey || localStorage.getItem('fusoft_groq_api_key') || '';
+    const activeKey = apiKey || import.meta.env.VITE_GROQ_API_KEY || localStorage.getItem('fusoft_groq_api_key') || '';
 
     // Si no está la API Key, simular respuesta académica local
     if (!activeKey) {
@@ -934,7 +934,7 @@ python main.py
     setChatInput('');
     setIsChatLoading(true);
 
-    const activeKey = apiKey || localStorage.getItem('fusoft_groq_api_key') || '';
+    const activeKey = apiKey || import.meta.env.VITE_GROQ_API_KEY || localStorage.getItem('fusoft_groq_api_key') || '';
 
     if (!activeKey) {
       setTimeout(() => {
@@ -1005,10 +1005,14 @@ Usa Markdown para tu formato. Si incluyes ejemplos de código, asegúrate de env
       setChatMessages(prev => [...prev, botMessage].slice(-20));
     } catch (error) {
       console.error(error);
+      let errorText = `Lo siento, ocurrió un error al comunicarme con la API de Groq: ${error.message || 'Error desconocido'}.`;
+      if (error.message && error.message.toLowerCase().includes('rate limit')) {
+        errorText += `\n\n💡 **Tip académico:** Has alcanzado el límite de tokens por minuto (TPM) en la API gratuita de Groq. Te recomendamos hacer clic en el engranaje de **Configurar Groq Key** (arriba a la derecha) y seleccionar el modelo **llama-3.3-70b-versatile**, ya que cuenta con cuotas de tokens significativamente más grandes y mayor calidad de respuesta.`;
+      }
       const errorMessage = {
         id: `err-${Date.now()}`,
         sender: 'bot',
-        text: `Lo siento, ocurrió un error al comunicarme con la API de Groq: ${error.message || 'Error desconocido'}.`,
+        text: errorText,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setChatMessages(prev => [...prev, errorMessage].slice(-20));

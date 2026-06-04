@@ -105,8 +105,20 @@ export default function App() {
       // Security Check: Enforce that user cannot edit non-owned repos
       const existing = articles.find(art => art.id === savedArticle.id);
       if (existing && !existing.isUserOwned) {
-        alert('No tienes permisos para modificar este repositorio.');
-        return;
+        // Permitir guardar si el cambio es exclusivamente en el análisis de IA (aiAnalysis)
+        const hasOtherChanges = 
+          existing.title !== savedArticle.title ||
+          existing.description !== savedArticle.description ||
+          existing.category !== savedArticle.category ||
+          existing.difficulty !== savedArticle.difficulty ||
+          existing.content !== savedArticle.content ||
+          existing.playgroundCode !== savedArticle.playgroundCode ||
+          existing.author !== savedArticle.author;
+
+        if (hasOtherChanges) {
+          alert('No tienes permisos para modificar el contenido principal de este repositorio.');
+          return;
+        }
       }
       // Edit existing
       updatedArticles = articles.map(art => 

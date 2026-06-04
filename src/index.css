@@ -1,32 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Google Material / fUSphere Theme */
+  /* Uniempresarial / fUSphere Theme (White, Red, Dark Blue) */
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e8eaed;
+  --bg-secondary: #f5f7fa;
+  --bg-tertiary: #e4e8f0;
   --card-bg: #ffffff;
-  --card-border: #dadce0;
-  --card-border-hover: #1a73e8;
+  --card-border: #cbd5e1;
+  --card-border-hover: #0f2d59; /* Uniempresarial Dark Blue */
   
-  --accent-primary: #1a73e8; /* Google Blue */
-  --accent-primary-hover: #1558d6;
-  --accent-primary-glow: rgba(26, 115, 232, 0.2);
+  --accent-primary: #0f2d59; /* Uniempresarial Dark Blue */
+  --accent-primary-hover: #0a1d3a;
+  --accent-primary-glow: rgba(15, 45, 89, 0.15);
   
-  --accent-secondary: #ea4335; /* Google Red */
-  --accent-secondary-glow: rgba(234, 67, 53, 0.2);
+  --accent-secondary: #d32f2f; /* Uniempresarial Red */
+  --accent-secondary-glow: rgba(211, 47, 47, 0.15);
   
-  --text-primary: #202124;
-  --text-secondary: #5f6368;
-  --text-muted: #70757a;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
   
   /* Difficulty Colors */
-  --difficulty-easy: #137333; 
-  --difficulty-easy-bg: #e6f4ea;
-  --difficulty-medium: #e37400;
-  --difficulty-medium-bg: #fef7e0;
-  --difficulty-hard: #c5221f;
-  --difficulty-hard-bg: #fce8e6;
+  --difficulty-easy: #16a34a; 
+  --difficulty-easy-bg: #f0fdf4;
+  --difficulty-medium: #ea580c;
+  --difficulty-medium-bg: #fff7ed;
+  --difficulty-hard: #dc2626;
+  --difficulty-hard-bg: #fef2f2;
 
   --font-sans: 'Roboto', 'Inter', system-ui, -apple-system, sans-serif;
   --font-heading: 'Google Sans', 'Outfit', 'Inter', sans-serif;
@@ -39,30 +39,62 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-  --shadow-sm: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
-  --shadow-lg: 0 4px 6px -1px rgba(60,64,67,0.3), 0 2px 4px -2px rgba(60,64,67,0.15);
+  --shadow-sm: 0 1px 2px 0 rgba(15,23,42,0.05), 0 1px 3px 1px rgba(15,23,42,0.03);
+  --shadow-lg: 0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -2px rgba(15,23,42,0.05);
   --shadow-glow: 0 0 20px var(--accent-primary-glow);
+
+  /* Dynamic gradient glow parameters */
+  --glow-color-1: rgba(15, 45, 89, 0.08);
+  --glow-color-2: rgba(211, 47, 47, 0.04);
+  --glow-color-3: rgba(15, 45, 89, 0.05);
+
+  /* Alert customized variables */
+  --alert-note-text: #0f2d59;
+  --alert-tip-text: #d32f2f;
+  --alert-important-text: #b45309;
+  --alert-warning-text: #b91c1c;
+  --alert-note-bg: rgba(15, 45, 89, 0.05);
+  --alert-tip-bg: rgba(211, 47, 47, 0.05);
+  --alert-important-bg: rgba(234, 88, 12, 0.05);
+  --alert-warning-bg: rgba(220, 38, 38, 0.05);
 }
 
 /* Light Theme as default, dark theme optional */
 [data-theme="dark"] {
-  --bg-primary: #202124;
-  --bg-secondary: #303134;
-  --bg-tertiary: #3c4043;
-  --card-bg: #202124;
-  --card-border: #5f6368;
-  --card-border-hover: #8ab4f8;
+  --bg-primary: #0a0e17; /* Deep Navy Blue Dark Mode background */
+  --bg-secondary: #101726;
+  --bg-tertiary: #1e293b;
+  --card-bg: #101726;
+  --card-border: #1e293b;
+  --card-border-hover: #3b82f6;
   
-  --accent-primary: #8ab4f8;
-  --accent-primary-hover: #aecbfa;
-  --accent-primary-glow: rgba(138, 180, 248, 0.2);
+  --accent-primary: #3b82f6; /* Vibrant light blue for readability on dark background */
+  --accent-primary-hover: #60a5fa;
+  --accent-primary-glow: rgba(59, 130, 246, 0.2);
   
-  --accent-secondary: #f28b82;
-  --text-primary: #e8eaed;
-  --text-secondary: #9aa0a6;
-  --text-muted: #80868b;
+  --accent-secondary: #ef4444; /* Vibrant light red for dark mode readability */
+  --accent-secondary-glow: rgba(239, 68, 68, 0.2);
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
   
   --shadow-lg: 0 4px 6px -1px rgba(0,0,0,0.5);
+
+  /* Dynamic gradient glow parameters */
+  --glow-color-1: rgba(59, 130, 246, 0.08);
+  --glow-color-2: rgba(239, 68, 68, 0.05);
+  --glow-color-3: rgba(59, 130, 246, 0.06);
+
+  /* Alert customized variables for dark mode */
+  --alert-note-text: #93c5fd;
+  --alert-tip-text: #fca5a5;
+  --alert-important-text: #fcd34d;
+  --alert-warning-text: #fca5a5;
+  --alert-note-bg: rgba(59, 130, 246, 0.08);
+  --alert-tip-bg: rgba(239, 68, 68, 0.08);
+  --alert-important-bg: rgba(245, 158, 11, 0.08);
+  --alert-warning-bg: rgba(239, 68, 68, 0.08);
 }
 
 * {
@@ -114,9 +146,9 @@ body {
   width: 100%;
   height: 100vh;
   background: 
-    radial-gradient(circle 800px at 50% -20%, rgba(139, 92, 246, 0.08), transparent 70%),
-    radial-gradient(circle 600px at 10% 40%, rgba(139, 92, 246, 0.05), transparent 70%),
-    radial-gradient(circle 600px at 90% 60%, rgba(139, 92, 246, 0.05), transparent 70%);
+    radial-gradient(circle 800px at 50% -20%, var(--glow-color-1), transparent 70%),
+    radial-gradient(circle 600px at 10% 40%, var(--glow-color-2), transparent 70%),
+    radial-gradient(circle 600px at 90% 60%, var(--glow-color-3), transparent 70%);
   z-index: -1;
   pointer-events: none;
   opacity: 0.8;
@@ -271,22 +303,22 @@ body {
 
 .markdown-alert-note {
   border-left-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.06);
+  background: var(--alert-note-bg);
 }
 
 .markdown-alert-tip {
   border-left-color: var(--accent-secondary);
-  background: rgba(6, 182, 212, 0.06);
+  background: var(--alert-tip-bg);
 }
 
 .markdown-alert-important {
   border-left-color: var(--difficulty-medium);
-  background: rgba(245, 158, 11, 0.06);
+  background: var(--alert-important-bg);
 }
 
 .markdown-alert-warning {
   border-left-color: var(--difficulty-hard);
-  background: rgba(239, 68, 68, 0.06);
+  background: var(--alert-warning-bg);
 }
 
 .markdown-alert-title {
@@ -298,10 +330,10 @@ body {
   font-size: 0.95rem;
 }
 
-.markdown-alert-note .markdown-alert-title { color: #a5b4fc; }
-.markdown-alert-tip .markdown-alert-title { color: #67e8f9; }
-.markdown-alert-important .markdown-alert-title { color: #fcd34d; }
-.markdown-alert-warning .markdown-alert-title { color: #fca5a5; }
+.markdown-alert-note .markdown-alert-title { color: var(--alert-note-text); }
+.markdown-alert-tip .markdown-alert-title { color: var(--alert-tip-text); }
+.markdown-alert-important .markdown-alert-title { color: var(--alert-important-text); }
+.markdown-alert-warning .markdown-alert-title { color: var(--alert-warning-text); }
 
 /* Tables in Markdown */
 .markdown-body table {
